@@ -1,0 +1,160 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<title>Graph theoretic analysis of Smart grid_Xinyue GUI</title>
+	<link rel="stylesheet" href="css/SelfPage.css">
+</head>
+<body>
+    <header>
+        <h1>Graph theoretic analysis of Smart grid</h1>
+        <p> key words: —Power system analysis, graph theory, scenorio modeling, metrics study.</p><br>
+        <p><b>Project Introduction:</b> The tool is aimed to convert the responses coming from the
+           dynamic power system into a dynamic graph and visualize it in the python 
+           platform. The living data information is received from a simulator to update 
+           the graph and some graph theory metric are chosen to analyze it. There are 
+           some discussion of the results based on graph specification to highlight the 
+           relationship between the graph characteristics and power system features. 
+           Finally we determine whether or how graph theory can analyze the electrical system.
+        </p><br>
+        <p>Here is the <a href="https://github.com/Xigui0314/Graph-theoretic-analysis-of-Smart-Grid/blob/master/Code">plain source code</a> for the project.
+        To find the details of each function:
+        Here is the <a href="#four">code</a> for each part development with explanation.</p><br>
+    </header>
+		<main>
+			<aside class = "left">
+			<img src="image/Nordic32.png" alt="new logo"> 
+            <img src="image/Nordic.png" alt="new logo">
+            <img src="image/Nodic.png" alt="new logo">
+            <img src="image/Up1.PNG" alt="new logo">
+            <img src="image/Up2.PNG" alt="new logo">
+            <img src="image/Up3.PNG" alt="new logo">
+            <img src="image/Up4.PNG" alt="new logo">
+            <img src="image/Up5.PNG" alt="new logo">
+            <img src="image/Up6.PNG" alt="new logo">
+            <img src="image/Up7.PNG" alt="new logo">
+            <img src="image/Up8.PNG" alt="new logo">
+        </aside>
+			<section class = "right">
+                <h2>The Description </h2>
+                
+                <p>The Tested System: The test model used is 
+                    <a href="https://www.researchgate.net/figure/Nordic-32-test-system_fig1_260767234">The Nordic 32 Test System</a>, 
+                   which contains 74 buses, 102 branches, 20 generators and 22 loads. <br> 
+                   The physical system and the converted graph is on the left side (First Three Image)<br>
+                   <b>Input: </b>The power system format data file converted from the Nordic32 physical system.<br>
+                   <b>Output: </b> After processing by three python function, it transferred into a node-edge based graph.<br>
+        </section>
+
+        <section class = "right">
+        <h3 id="four">Python code with comment and description:</h3>  
+        <p>There are four functions need to be created.
+            A <a href="#five">Graph_Create function </a> to parse the data file in power system format and transfer it into a graph. 
+            A <a href="#six">Graph_Visualize function </a>to represent the graph in the best layout for power system structure. 
+            A <a href="#seven">Graph_Update function </a>to update the new values several times in every second.
+            A <a href="#eight">Graph_Test function </a>to test the power system by graph-theory based metrics.
+        </p>
+
+        <section>
+        <h4 id="five">To create a graph:</h4> 
+        <p> The function create the Directed graph with The nodes represent generator and bus have the features of voltage level. 
+                The edges represent for lines and transformers have the features of resistance and reactance value.<br>
+                The procudure of the stage is: Open the file, Tokenize the file, extract the value and add Nodes/Edges.
+            </p>
+        <img src="image/create.png" width = "100%" alt="new logo">
+        </section>
+
+        <section>
+        <h4 id="six">To visualize a graph:</h4> 
+        <p>  In the IEEE power system, the spring layout looks like an electrical network. 
+            In the spring system, the two elements are mass and spring. Where the mass is analogous to a generator
+             or the load bus and the spring is analogous to a transmission line that connects the generator.
+             Therefore we choose the <b>spring layout</b>.<br>
+             For the values , we keet it as per unit: <br>
+             For example, if V=0.9, means new Voltages=90% * old voltage. The changing of color can reflect the voltage change.
+             Typically, the voltage value fluctuates more than 10%, and it will affect the power system.<br>
+             Here is the color table to reflect the voltage level status:
+             <img src="image/table.PNG" width = "70%" alt="new logo">
+            </p>
+        </section>
+        <section>
+            <p>The code is below:</p>
+            <img src="image/vis.PNG" width = "100%" alt="new logo">
+        </section>
+        
+        <section>
+        <h4 id="seven">To update a graph:</h4> 
+        <p>We call the Function:getBranchPow(branchName)[imported from PYRAMESE] return list of branch powers.<br>
+             These are active and reactive power at the origin and extremity respectively. 
+             (p_orig, q_orig, p_extr, q_extr) <br>
+            This Function update new volt and kept as per unit also get power value for each branch.<br>
+            <b>two edge attribute:</b> Volt, Power(P_orig, Q_orig, P_extr, Q_extr] <br>
+            We set new attribute and Get edge attributte and Update them 
+        The and the changing of the graph from Update 1 to Update 168( Blackout Occurance) is on the left:
+        <img src="image/capture.PNG" width = "100%" alt="new logo">
+        </p>
+         </section>
+
+        <section>
+            <nav>
+                <h4 id="eight">The tested metric:</h4> 
+                <a href="#one" class = "active">PageRank</a>
+                <a href="#two">Eigenvalue</a>
+                <a href="#three">Eigenvector_centrality</a>
+                </nav>
+
+                <section>
+                <h5 id="one">Pagerank:</h5> 
+                    <p>
+                    In the graph theory,, Google PageRank (Google PR) takes the the structure of the incoming links to computes 
+                    a ranking of the nodes. In Google search engine, the PageRank algorithm is one of the methods Google uses to
+                     determine a page's relevance or importance. Relevant pages are more likely to appear at the top of the search
+                      results due to it higher PageRank value. In this case, the node with a higher PageRank is more significant 
+                      in this communicationx network.
+                    </p>
+                    <img src="image/t1.png" width = "50%" alt="new logo">
+                </section>
+                
+                <section>
+                        <h5 id="two">Eigenvalue:</h5>
+                   <p>
+                 The eigenvalue is computed from the Laplacian matrix for the graph. 
+                 The Laplacian matrix is equal to the graph degree matrix minus the adjacency matrix.
+                 Taking the weight from the edge to build the Laplacian matrix and get the eigenvalue from it for the graph.
+                   </p>
+                        <img src="image/t2.png" width = "50%" alt="new logo">
+                </section>
+                
+                <section>
+                        <h5 id="three">Centrality:</h5>
+                   <p>
+                    Get the weight from the edge and build the vector, which can be multiplied by the graph’s adjacency 
+                    matrix and return itself. Also it can be referred that the Eigenvector centrality is one of the characteristic 
+                    of the graph’s adjacency matrix. It is considered as a specific pattern of graph connections returns a set 
+                    of vertex values to described the equilibrium property.
+                   </p>
+                   <img src="image/t3.png" width = "50%" alt="new logo">
+                </section>
+                
+            
+        </section>
+        </section>
+</main>
+
+<footer>
+        <p>
+            Here is the metric testing result after visualize the data:<br>
+            <img src="image/PR.png" width = "70%" alt="new logo"> The Result for PageRank
+            <img src="image/Ei.png" width = "70%" alt="new logo"> The result for Eigenvalue
+            <img src="image/Cen.png" width = "70%" alt="new logo"> The result for Centrality       
+            </p>
+<p>
+        This page was created by Xinyue GUI on 24th Oct 2019. <br>
+        For Contact: <a href="mailto:xinyueguikwei@gmail.com">My Email Address</a>.<br> 
+        92 Toftwood, Sheffeild<br>
+        UK
+</p>
+</footer>
+
+</body>
+</html>
